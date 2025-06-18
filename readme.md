@@ -1,4 +1,4 @@
-# 📦 User Settings App
+# 📦 InmobiliarIA Web/App
 
 Esta es una aplicación web full stack que permite a los usuarios visualizar y modificar su información personal. Usa **Node.js con Express** para el backend y **HTML/CSS/JavaScript modular** para el frontend.
 
