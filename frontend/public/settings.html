@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Configuración de Usuario | Inmobiliar-IA</title>
-    <link rel="stylesheet" href="../../InmobiliariaProject/frontend/css/settings.css">
+    <link rel="stylesheet" href="css/settings.css">
 </head>
 <body>
 <div class="settings-container">
@@ -25,15 +25,19 @@
 
         <section class="info-section">
             <h2>Datos personales</h2>
-            <div class="info-item">
+            <div class="info-item" data-field="fullName">
                 <label>Nombre completo</label>
-                <div class="info-value">Pepito Pérez <button class="edit-btn">Modificar</button></div>
+                <div class="info-value">Cargando...</div>
             </div>
-            <div class="info-item">
+            <div class="info-item" data-field="username">
+                <label>Usuario</label>
+                <div class="info-value">Cargando...</div>
+            </div>
+            <div class="info-item" data-field="email">
                 <label>Email</label>
-                <div class="info-value">Protelab@corros.com.co <button class="edit-btn">Modificar</button></div>
+                <div class="info-value">Cargando...</div>
             </div>
-            <div class="info-item">
+            <div class="info-item" data-field="password">
                 <label>Contraseña</label>
                 <div class="info-value">*************** <button class="edit-btn">Modificar</button></div>
             </div>
@@ -41,23 +45,21 @@
 
         <section class="info-section">
             <h2>Información del contacto</h2>
-            <div class="info-item">
-                <label>Email de contacto</label>
-                <div class="info-value">Protelab@corros.com.co <button class="edit-btn">Modificar</button></div>
-            </div>
-            <div class="info-item">
+            <div class="info-item" data-field="tel">
                 <label>Número personal</label>
-                <div class="info-value">+57 123 456 7890 <button class="edit-btn">Modificar</button></div>
+                <div class="info-value">Cargando...</div>
             </div>
-            <div class="info-item">
-                <label>Número de WA</label>
-                <div class="info-value">+57 987 654 3210 <button class="edit-btn">Modificar</button></div>
+            <div class="info-item" data-field="address">
+                <label>Dirección</label>
+                <div class="info-value">Cargando...</div>
             </div>
-            <div class="info-item">
+            <div class="info-item" data-field="type">
                 <label>Tipo de usuario</label>
-                <div class="info-value">Propietario <button class="edit-btn">Modificar</button></div>
+                <div class="info-value">Cargando...</div>
             </div>
         </section>
+
+        <button onclick="location.href='index.html'" class="edit-btn" style="margin-top: 2rem">Regresar al inicio</button>
     </main>
 
     <footer class="footer">
@@ -77,6 +79,7 @@
     </footer>
 </div>
 
-<script src="js/settings.js"></script>
+<script type="module" src="js/settings.js" defer></script>
+<script type="module" src="js/update.js" defer></script>
 </body>
 </html>

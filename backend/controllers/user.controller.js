@@ -16,40 +16,76 @@ export const getUserProfile = async (req, res) => {
 }
 
 export const updateUser = async (req, res) => {
-    const {fullName, username, email, currentPassword, newPassword, address, tel, type, bio} = req.body; // Extract user data from request body
-    let {profileImg} = req.body; // Extract profile image from request body
+    console.log("Solicitud recibida para actualizar:", req.body); // 👈
 
-    const userId = req.user._id; // Get user ID from authenticated request
+    const { fullName, username, email, currentPassword, newPassword, address, tel, type, bio } = req.body;
+    let { profileImg } = req.body;
+
+    const userId = req.user._id;
+
     try {
-       const user = await User.findById(userId); // Find user by ID
-       if(!user) return res.status(404).json({error: "User not found"}); // If user not found, return 404
+        const user = await User.findById(userId);
+        if (!user) return res.status(404).json({ error: "User not found" });
 
-         // Check if current password is provided and matches the user's password
-        if((!currentPassword || newPassword) && (!newPassword || currentPassword)) {
-            return res.status(400).json({error: "Please provide both current password and new password"}); // If current password or new password is missing, return 400
+        // Validar cambio de contraseña si se solicita
+        if ((currentPassword && !newPassword) || (!currentPassword && newPassword)) {
+            return res.status(400).json({ error: "Proporcione tanto la contraseña actual como la nueva" });
         }
-        if(currentPassword && newPassword) {
-            const isMatch = await bcrypt.compare(currentPassword, user.password); // Compare current password with user's password
-            if(!isMatch) {
-                return res.status(400).json({error: "Current password is incorrect"}); // If current password does not match, return 400
+
+        if (currentPassword && newPassword) {
+            const isMatch = await bcrypt.compare(currentPassword, user.password);
+            if (!isMatch) {
+                return res.status(400).json({ error: "La contraseña actual es incorrecta" });
             }
-            if(newPassword.length < 6) {
-                return res.status(400).json({error: "New password must be at least 6 characters long"}); // If new password is too short, return 400
+            if (newPassword.length < 6) {
+                return res.status(400).json({ error: "La nueva contraseña debe tener al menos 6 caracteres" });
             }
-            const salt = await bcrypt.genSalt(10); // Generate salt for hashing
-            user.password = await bcrypt.hash(newPassword, salt); // Hash new password
-
+            const salt = await bcrypt.genSalt(10);
+            user.password = await bcrypt.hash(newPassword, salt);
         }
-        if(!profileImg) {
-            profileImg = user.profileImg; // If no new profile image is provided, keep the existing one
+
+        // Verifica si el nuevo email o username ya existen en otro usuario
+        if (email && email !== user.email) {
+            const emailExists = await User.findOne({ email });
+            if (emailExists && emailExists._id.toString() !== user._id.toString()) {
+                return res.status(400).json({ error: "Este correo ya está en uso" });
+            }
         }
-        
 
+        if (username && username !== user.username) {
+            const usernameExists = await User.findOne({ username });
+            if (usernameExists && usernameExists._id.toString() !== user._id.toString()) {
+                return res.status(400).json({ error: "Este nombre de usuario ya está en uso" });
+            }
+        }
 
+        // Asignar nuevos datos
+        user.fullName = fullName || user.fullName;
+        user.username = username || user.username;
+        user.email = email || user.email;
+        user.address = address || user.address;
+        user.tel = tel || user.tel;
+        user.type = type || user.type;
+        user.bio = bio || user.bio;
+        user.profileImg = profileImg || user.profileImg;
+
+        await user.save();
+
+        // Devolver los datos actualizados
+        res.status(200).json({
+            _id: user._id,
+            fullName: user.fullName,
+            username: user.username,
+            email: user.email,
+            address: user.address,
+            tel: user.tel,
+            type: user.type,
+            profileImg: user.profileImg,
+            bio: user.bio
+        });
 
     } catch (error) {
-        console.log("Error in updateUserProfile controller", error.message);
-        res.status(500).json({error: "Internal Server Error"});
+        console.log("Error in updateUser controller", error.message);
+        res.status(500).json({ error: "Internal Server Error" });
     }
-
 }

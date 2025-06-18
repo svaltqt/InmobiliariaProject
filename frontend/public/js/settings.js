@@ -1,43 +1,27 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Función para manejar los botones de modificación
-    const editButtons = document.querySelectorAll('.edit-btn');
+import './update.js';
 
-    editButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const infoItem = this.closest('.info-item');
-            const label = infoItem.querySelector('label').textContent;
-            const currentValue = infoItem.querySelector('.info-value').firstChild.textContent.trim();
-
-            // Solo para demostración - en una implementación real, esto abriría un formulario de edición
-            const newValue = prompt(`Editar ${label}`, currentValue);
-
-            if (newValue && newValue !== currentValue) {
-                infoItem.querySelector('.info-value').firstChild.textContent = newValue;
-                // Aquí iría una llamada a la API para actualizar el dato en el backend
-                console.log(`Actualizando ${label} a:`, newValue);
-            }
+document.addEventListener("DOMContentLoaded", async () => {
+    try {
+        const res = await fetch("/api/auth/me", {
+            credentials: "include"
         });
-    });
 
-    // Simular datos del usuario (en un caso real esto vendría de una API)
-    const userData = {
-        fullName: "Pepito Pérez",
-        email: "Protelab@corros.com.co",
-        contactEmail: "Protelab@corros.com.co",
-        phone: "+57 123 456 7890",
-        whatsapp: "+57 987 654 3210",
-        userType: "Propietario"
-    };
+        if (!res.ok) {
+            throw new Error("No se pudo obtener la información del usuario");
+        }
 
-    // Actualizar UI con datos del usuario
-    function loadUserData() {
-        document.querySelectorAll('.info-item')[0].querySelector('.info-value').firstChild.textContent = userData.fullName;
-        document.querySelectorAll('.info-item')[1].querySelector('.info-value').firstChild.textContent = userData.email;
-        document.querySelectorAll('.info-item')[3].querySelector('.info-value').firstChild.textContent = userData.contactEmail;
-        document.querySelectorAll('.info-item')[4].querySelector('.info-value').firstChild.textContent = userData.phone;
-        document.querySelectorAll('.info-item')[5].querySelector('.info-value').firstChild.textContent = userData.whatsapp;
-        document.querySelectorAll('.info-item')[6].querySelector('.info-value').firstChild.textContent = userData.userType;
+        const user = await res.json();
+        const infoValues = document.querySelectorAll(".info-value");
+
+        infoValues[0].innerHTML = `${user.fullName || "No definido"} <button class="edit-btn">Modificar</button>`;
+        infoValues[1].innerHTML = `${user.username || "No definido"} <button class="edit-btn">Modificar</button>`;
+        infoValues[2].innerHTML = `${user.email || "No definido"} <button class="edit-btn">Modificar</button>`;
+        infoValues[3].innerHTML = `*************** <button class="edit-btn">Modificar</button>`;
+        infoValues[4].innerHTML = `${user.tel || "No definido"} <button class="edit-btn">Modificar</button>`;
+        infoValues[5].innerHTML = `${user.address || "No definido"} <button class="edit-btn">Modificar</button>`;
+        infoValues[6].innerHTML = `${user.type || "No definido"} <button class="edit-btn">Modificar</button>`;
+
+    } catch (error) {
+        console.error("Error cargando datos del usuario:", error.message);
     }
-
-    loadUserData();
 });

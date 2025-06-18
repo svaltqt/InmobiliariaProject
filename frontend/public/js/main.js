@@ -1,53 +1,110 @@
-// Seleccionar elementos
-const loginBtn = document.querySelector('header nav a[href="#"]:first-child');
-const modal = document.getElementById('loginModal');
-const closeBtn = document.querySelector('.close-modal');
+import { loginUser } from './login.js';
+import { logoutUser } from './logout.js';
+import { checkSession } from './checkSession.js';
+import { registerUser } from './register.js';
 
-// Abrir modal al hacer clic en "Iniciar sesión"
-loginBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    modal.style.display = 'block';
-});
+document.addEventListener('DOMContentLoaded', () => {
+    checkSession();
+    const profileBtn = document.getElementById('profileBtn');
+    const loginBtn = document.getElementById('loginBtn');
+    const modal = document.getElementById('loginModal');
+    const closeBtn = document.querySelector('.close-modal');
+    const logoutBtn = document.getElementById('logoutBtn');
+    let loginFormInitialized = false;
+    loginBtn?.addEventListener('click', (e) => {
+        e.preventDefault();
+        modal.style.display = 'block';
 
-// Cerrar modal al hacer clic en la X
-closeBtn.addEventListener('click', () => {
-    modal.style.display = 'none';
-});
+        // solo agregar el eventListener una vez
+        if (!loginFormInitialized) {
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                loginForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
 
-// Cerrar modal al hacer clic fuera del contenido
-window.addEventListener('click', (e) => {
-    if (e.target === modal) {
+                    const username = document.getElementById('username').value;
+                    const password = document.getElementById('password').value;
+
+                    const userData = await loginUser(username, password);
+
+                    if (userData) {
+                        modal.style.display = 'none';
+                        loginBtn.style.display = 'none';
+                        registerBtn.style.display= 'none';
+                        logoutBtn.style.display = 'inline';
+                        profileBtn.style.display = 'inline';
+
+
+                    } else {
+                        alert("Credenciales incorrectas");
+                    }
+                });
+                loginFormInitialized = true;
+            }
+        }
+    });
+    closeBtn?.addEventListener('click', () => {
         modal.style.display = 'none';
-    }
-});
+    });
+    window.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
 
-// Seleccionar elementos
-const registerBtn = document.querySelector('header nav a[href="#"]:last-child');
-const registerModal = document.getElementById('registerModal');
-const cancelBtn = document.querySelector('.cancel-btn');
+    // --- Registro ---
+    const registerBtn = document.getElementById('registerBtn');
+    const registerModal = document.getElementById('registerModal');
+    const cancelBtn = document.querySelector('.cancel-btn');
 
-// Abrir modal de registro
-registerBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    registerModal.style.display = 'block';
-    registerModal.classList.add('no-close'); // Agrega clase para evitar cierre
-});
+    registerBtn?.addEventListener('click', (e) => {
+        e.preventDefault();
+        registerModal.style.display = 'block';
+        registerModal.classList.add('no-close');
 
-// Cerrar modal con botón Cancelar
-cancelBtn.addEventListener('click', () => {
-    registerModal.style.display = 'none';
-    registerModal.classList.remove('no-close');
-});
+        const registerForm = document.getElementById('registerForm');
 
-// Evitar que el formulario se envíe (solo para demostración)
-document.getElementById('registerForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    alert('Registro exitoso (esto es una demo)');
-    registerModal.style.display = 'none';
-    registerModal.classList.remove('no-close');
-});
+        registerForm?.addEventListener('submit', async (e) => {
+            e.preventDefault();
 
-// Deshabilitar cierre al hacer clic fuera (no necesario con la clase no-close)
-registerModal.addEventListener('click', (e) => {
-    e.stopPropagation(); // Detiene la propagación del evento
+            const fullName = document.getElementById('registerFullName').value;
+            const username = document.getElementById('registerUsername').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+
+            const result = await registerUser(fullName, username, email, password, confirmPassword);
+
+            if (result) {
+                registerBtn.style.display= 'none';
+                document.getElementById('registerModal').style.display = 'none';
+                document.getElementById('loginBtn').style.display = 'none';
+                document.getElementById('logoutBtn').style.display = 'inline';
+                document.getElementById('profileBtn').style.display = 'inline';
+
+            }
+        });
+
+    });
+
+    cancelBtn?.addEventListener('click', () => {
+        registerModal.style.display = 'none';
+        registerModal.classList.remove('no-close');
+    });
+
+    // --- Logout ---
+    logoutBtn?.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const success = await logoutUser();
+        if (success) {
+            logoutBtn.style.display = 'none';
+            loginBtn.style.display = 'inline';
+            registerBtn.style.display= 'inline';
+        }
+    });
+
+    //-- profile
+    document.getElementById("profileBtn").addEventListener("click", () => {
+        window.location.href = "/settings.html";
+    });
 });
