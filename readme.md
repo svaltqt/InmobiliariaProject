@@ -43,9 +43,9 @@ npm install
 Crea un archivo .env en la raíz del proyecto con el siguiente contenido:
 
 ```env
-MONGO_URI=mongodb+srv://usuario:contraseña@cluster0.itvrl4h.mongodb.net/users?retryWrites=true&w=majority&appName=Cluster0
+MONGO_URI=mongodb+srv://dbadmin:dbpassword@cluster0.itvrl4h.mongodb.net/users?retryWrites=true&w=majority&appName=Cluster0
 PORT=3000
-JWT_SECRET=<tu-secreto>
+JWT_SECRET=secret=NV0B7dysi8KA6h9zNIhXUPuVNirIBRmhW57ykoqkfD0=
 NODE_ENV=development
 PORT2=8000
 ```
