@@ -1,0 +1,267 @@
+/* Reset y estilos generales */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.94), rgba(255,255,255,0.94)), #fff;
+    color: #222;
+    line-height: 1.6;
+}
+
+/* === Header con imagen de fondo === */
+header {
+    background: url('../assets/medellin_landingpage.jpg') no-repeat center center/cover;
+    height: 475px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+}
+
+header h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    font-weight: bold;
+}
+
+header nav {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+}
+
+header nav a {
+    color: white;
+    margin-left: 15px;
+    padding: 8px 15px;
+    backdrop-filter: blur(5px);
+    text-decoration: none !important; /* Elimina el subrayado */
+    background-color: rgba(122, 118, 184, 0.212);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.562);
+}
+
+header input[type="text"] {
+    padding: 10px 15px;
+    width: 300px;
+    max-width: 80%;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    margin-top: 1rem;
+}
+
+/* === Sección de ubicaciones === */
+section.ubicaciones {
+    padding: 2rem;
+    text-align: center;
+    max-width: 1200px; /* Limita el ancho máximo para mejor legibilidad */
+    margin: 0 auto; /* Centra la sección */
+}
+
+.ubicaciones h2 {
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem; /* Título un poco más grande */
+    color: #333; /* Color más oscuro para mejor contraste */
+}
+
+.grid-ubicaciones {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);  /* 4 columnas fijas */
+    gap: 0.5rem;  /* Reducimos el espacio entre elementos (antes era 1rem o 1.5rem) */
+    justify-items: center;
+    max-width: 800px;  /* Ancho máximo más pequeño para agrupar más */
+    margin: 0 auto;
+    padding: 0 0.5rem;  /* Padding lateral reducido */
+}
+
+.ubicacion {
+    text-align: center;
+    width: 100%; /* Ocupa todo el ancho disponible */
+}
+
+.ubicacion img {
+    width: 100%;
+    max-width: 180px; /* Tamaño máximo para las imágenes */
+    height: 120px; /* Altura fija para uniformidad */
+    object-fit: cover; /* Asegura que la imagen cubra el espacio */
+    border-radius: 10px;
+    margin-bottom: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* Sombra sutil */
+    transition: transform 0.3s ease; /* Efecto hover */
+}
+
+.ubicacion img:hover {
+    transform: scale(1.03); /* Efecto de zoom al pasar el mouse */
+}
+
+.ubicacion p {
+    margin-top: 0.5rem;
+    font-weight: 700; /* Texto un poco más grueso */
+    color: #444; /* Color de texto más oscuro */
+}
+
+
+/* === Sección de comentarios === */
+section.comentarios {
+    padding: 2rem;
+    max-width: 1200px; /* Mismo ancho máximo que ubicaciones */
+    margin: 0 auto; /* Centrado horizontal */
+    width: 100%; /* Asegura que ocupe el ancho disponible */
+    box-sizing: border-box; /* Incluye padding en el ancho total */
+}
+
+.comentarios h2 {
+    text-align: center;
+    margin-bottom: 0,05rem;
+    
+    font-size: 1.5rem; /* Opcional: igual que ubicaciones */
+    color: #333; /* Opcional: igual que ubicaciones */
+}
+
+.grid-comentarios {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+    padding: 0 1rem; /* Padding lateral para no pegarse a bordes */
+}
+
+.card-comentario {
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 1rem;
+    font-size: 1.4rem;
+    font-weight: 600;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: white;
+    /* Opcional: sombra sutil como en ubicaciones */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.card-comentario .usuario {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    font-size: 0.9rem;
+    color: #555;
+}
+.card-comentario .usuario img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover; /* Para que la imagen mantenga proporciones */
+}
+
+
+/* === Footer oscuro === */
+footer {
+    background-color: #1e2039;
+    color: white;
+    padding: 2rem;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+footer div {
+    margin: 0.5rem 0;
+}
+
+footer h4 {
+    margin-bottom: 0.5rem;
+}
+
+footer a {
+    color: #ccc;
+    text-decoration: none;
+    display: block;
+    margin-bottom: 0.3rem;
+}
+
+footer a:hover {
+    color: white;
+}
+
+/* Estilos del modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro semi-transparente */
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 25px;
+    width: 90%;
+    max-width: 400px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+    animation: modalopen 0.4s;
+}
+
+@keyframes modalopen {
+    from {opacity: 0; transform: translateY(-50px);}
+    to {opacity: 1; transform: translateY(0);}
+}
+
+.close-modal {
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #333;
+}
+
+.modal input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.modal button {
+    width: 100%;
+    padding: 12px;
+    background-color: #1e2039;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.cancel-btn {
+    background-color: #f44336 !important;
+}
+
+/* Deshabilita el clic fuera del modal */
+.modal.no-close {
+    pointer-events: auto;
+}
+
+.modal.no-close .modal-content {
+    pointer-events: auto;
+}

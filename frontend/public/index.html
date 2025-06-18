@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Inmobiliar-IA</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- Header -->
+<header>
+    <nav>
+        <a href="#" id="loginBtn">Iniciar sesión</a>
+        <a href="#" id="registerBtn" >Registrarse</a>
+    </nav>
+    <h1>Inmobiliar-IA</h1>
+    <input type="text" placeholder="¿Dónde te quieres quedar?" />
+</header>
+
+<!-- Sección de ubicaciones -->
+<section class="ubicaciones">
+    <h1>Ubicaciones populares</h1>
+    <div class="grid-ubicaciones">
+        <!-- Ubicaciones repetidas (puedes reemplazar imagenes y nombres) -->
+        <div class="ubicacion">
+            <img src="./assets/udea_cartoon_ia.png" alt="UdeaA" />
+            <p>Universidad de Antioquia</p>
+        </div>
+        <div class="ubicacion">
+            <img src="./assets/eafit_cartoon_ia.png" alt="Ubicación 2" />
+            <p>Universidad EAFIT</p>
+        </div>
+        <div class="ubicacion">
+            <img src="./assets/poli_cartoon_ia.png" alt="Ubicación 3" />
+            <p>Politécnico JIC</p>
+        </div>
+        <div class="ubicacion">
+            <img src="./assets/UPB_cartoon_ia.png" alt="Ubicación 4" />
+            <p>Universidad UPB</p>
+        </div>
+        <div class="ubicacion">
+            <img src="./assets/UdeM_cartoon_ia.png" alt="Ubicación 5" />
+            <p>Universidad de Medellin</p>
+        </div>
+        <div class="ubicacion">
+            <img src="./assets/provenza_cartoon_ia.png" alt="Ubicación 6" />
+            <p>Provenza(Poblado)</p>
+        </div>
+        <div class="ubicacion">
+            <img src="./assets/estadio_cartoon_ia.png" alt="Ubicación 7" />
+            <p>El Estadio</p>
+        </div>
+        <div class="ubicacion">
+            <img src="./assets/laureles_cartoon_ia.png" alt="Ubicación 8" />
+            <p>Laureles</p>
+        </div>
+        <!-- Agrega más ubicaciones si deseas -->
+    </div>
+</section>
+
+<!-- Sección de comentarios -->
+<section class="comentarios">
+    <h2>Comentarios</h2>
+    <div class="grid-comentarios">
+        <!-- Comentario 1 -->
+        <div class="card-comentario">
+            <p>“Increíble variedad de lugares”</p>
+            <div class="usuario">
+                <img src="./assets/perfi1.jpg" alt="Usuario" />
+                <div>
+                    <div><strong>Nombre</strong></div>
+                    <div>Descripción</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comentario 2 -->
+        <div class="card-comentario">
+            <p>“Funciona perfecto, la recomiendo”</p>
+            <div class="usuario">
+                <img src="./assets/perfi1.jpg" alt="Usuario"/>
+                <div>
+                    <div><strong>Juan Camilo</strong></div>
+                    <div>Busca cerca transporte</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comentario 3 -->
+        <div class="card-comentario">
+            <p>“La mejor app para arrendar”</p>
+            <div class="usuario">
+                <img src="./assets/perfi1.jpg" alt="Usuario" />
+                <div>
+                    <div><strong>Nombre</strong></div>
+                    <div>Descripción</div>
+                </div>
+            </div>
+        </div>
+        <!-- Comentario 4 -->
+        <div class="card-comentario">
+            <p>“¡Encontré mi hogar rápido!”</p>
+            <div class="usuario">
+                <img src="./assets/perfi1.jpg" alt="Usuario" />
+                <div>
+                    <div><strong>Nombre</strong></div>
+                    <div>Descripción</div>
+                </div>
+            </div>
+        </div>
+        <!-- Puedes copiar más bloques como estos si deseas -->
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <div>
+        <h4>Inmobiliar-IA</h4>
+        <a href="#">Dirección</a>
+        <a href="#">Teléfono</a>
+        <a href="#">Correo:hola@gmail.comm</a>
+    </div>
+    <div>
+        <h4>Información</h4>
+        <a href="#">Página principal</a>
+        <a href="#">Términos y condiciones</a>
+    </div>
+</footer>
+
+<!-- Inicio sesion flotante -->
+<div id="loginModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2>Iniciar sesión</h2>
+        <form>
+            <input type="email" placeholder="Correo electrónico" required>
+            <input type="password" placeholder="Contraseña" required>
+            <button type="submit">Ingresar</button>
+        </form>
+    </div>
+</div>
+<div id="registerModal" class="modal">
+    <div class="modal-content">
+        <h2>Registrarse</h2>
+        <form id="registerForm">
+            <input type="text" placeholder="Nombre completo" required>
+            <input type="email" placeholder="Correo electrónico" required>
+            <input type="password" placeholder="Contraseña" required>
+            <input type="password" placeholder="Confirmar contraseña" required>
+            <div class="modal-buttons">
+                <button type="submit">Registrarse</button>
+                <button type="button" class="cancel-btn">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- Scripts -->
+<script src="js/main.js"></script>
+</body>
+</html>
