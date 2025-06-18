@@ -1,6 +1,8 @@
 import User from "../models/user.model.js";
 import bcrypt from 'bcryptjs';
 import {generateTokenAndSetCookie} from "../lib/utils/generateToken.js";
+import { UserPrototype } from "../lib/prototypes/userPrototype.js";
+
 
 export const signup = async (req,res)=>{
     try{
@@ -25,13 +27,16 @@ export const signup = async (req,res)=>{
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-
-        const newUser = new User({
+        // Creamos un prototipo base
+        const basePrototype = new UserPrototype({
             fullName,
             username,
             email,
             password: hashedPassword
-        })
+        });
+
+        const userClone = basePrototype.clone();
+        const newUser = new User(userClone);
 
         if(newUser){
             generateTokenAndSetCookie(newUser._id,res)

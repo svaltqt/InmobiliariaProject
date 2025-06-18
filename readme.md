@@ -78,6 +78,9 @@ InmobiliariaProject/
 │   │   ├── auth.controller.js  # Lógica de autenticación
 │   │   └── user.controller.js  # Controlador de perfil de usuario
 │   ├── lib/
+│   │   ├── prototypes/
+│   │   │   ├── userPrototype.js    # Base del Prototipo de usuario
+│   │   │   └── userPrototypes.js   # Prototipos de usuario
 │   │   └── utils/
 │   │       └── generateToken.js    # Generación de tokens JWT
 │   ├── middleware/

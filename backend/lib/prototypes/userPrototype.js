@@ -8,7 +8,7 @@ export class UserPrototype {
                     tel = "",
                     type = "client",
                     profileImg = "",
-                    bio = ""
+                    bio = "Usuario nuevo"
                 } = {}) {
         this.fullName = fullName;
         this.username = username;
