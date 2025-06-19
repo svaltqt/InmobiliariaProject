@@ -132,6 +132,108 @@ InmobiliariaProject/
 
 ---
 
+## Diagramas de FLujo
+### Inicio sesión
+Archivos relacionados: auth.controller.js, login.js, protecRoute.js
+```mermaid
+flowchart TD
+    A[Inicio] --> B[Ingresar username y password]
+    B --> C{Validar campos vacíos?}
+    C -->|Sí| D[Mostrar error]
+    C -->|No| E[POST /api/auth/login]
+    E --> F{Usuario existe en BD?}
+    F -->|No| G[Mostrar error: Credenciales inválidas]
+    F -->|Sí| H[Verificar contraseña con bcrypt]
+    H --> I{¿Coincide?}
+    I -->|No| G
+    I -->|Sí| J[Generar token JWT '15 días']
+    J --> K[Set cookie httpOnly]
+    K --> L[Redirigir a dashboard]
+    L --> M[Fin]
+```
+
+### Cerrar sesión
+Archivos relacionados: auth.controller.js, logout.js
+```mermaid
+flowchart TD
+    A[Inicio] --> B[POST /api/auth/logout]
+    B --> C[Limpiar cookie 'jwt']
+    C --> D[Redirigir a página de inicio]
+    D --> E[Fin]
+```
+### Desactivar cuenta
+Archivos relacionados: user.controller.js, deactivateAccount.js
+```mermaid
+flowchart TD
+    A[Inicio] --> B[Mostrar confirmación]
+    B --> C{¿Confirmó?}
+    C -->|No| D[Cancelar]
+    C -->|Sí| E[POST /api/users/deactivate]
+    E --> F[Actualizar BD: active=false]
+    F --> G[Limpiar cookie JWT]
+    G --> H[Redirigir a inicio con flag ?account=deactivated]
+    H --> I[Fin]
+```
+
+### Eliminar Cuenta
+Archivos relacionados: user.controller.js, deleteAccount.js
+```mermaid
+flowchart TD
+    A[Inicio] --> B[Mostrar confirmación irreversible]
+    B --> C{¿Confirmó?}
+    C -->|No| D[Cancelar]
+    C -->|Sí| E[Solicitar contraseña]
+    E --> F{¿Contraseña válida?}
+    F -->|No| G[Mostrar error]
+    F -->|Sí| H[DELETE /api/users/delete]
+    H --> I[Eliminar usuario de BD]
+    I --> J[Limpiar cookies/localStorage]
+    J --> K[Redirigir a página de inicio]
+    K --> L[Fin]
+
+```
+
+### Modificar Perfil
+Archivos relacionados: user.controller.js, update.js
+```mermaid
+flowchart TD
+    A[Inicio] --> B[Seleccionar campo a modificar]
+    B --> C{¿Es contraseña?}
+    C -->|No| D[Mostrar input/select]
+    C -->|Sí| E[Mostrar inputs: actual y nueva]
+    D/E --> F[Validar formato 'email, etc.']
+    F --> G{¿Datos válidos?}
+    G -->|No| H[Mostrar error]
+    G -->|Sí| I[POST /api/users/update]
+    I --> J{¿Cambió contraseña?}
+    J -->|Sí| K[Verificar actual con bcrypt]
+    K --> L{¿Coincide?}
+    L -->|No| M[Mostrar error]
+    L -->|Sí| N[Hashear nueva contraseña]
+    J -->|No| O[Actualizar campo en BD]
+    N/O --> P[Devolver datos actualizados]
+    P --> Q[Mostrar nuevo valor en UI]
+    Q --> R[Fin]
+```
+### Middleware: protecRoute
+```mermaid
+flowchart TD
+    A[Inicio] --> B[Obtener cookie 'jwt']
+    B --> C{¿Token existe?}
+    C -->|No| D[401: No autorizado]
+    C -->|Sí| E[Verificar JWT_SECRET]
+    E --> F{¿Token válido?}
+    F -->|No| G[Limpiar cookie + 401]
+    F -->|Sí| H[Buscar usuario en BD]
+    H --> I{¿Existe?}
+    I -->|No| J[Limpiar cookie + 404]
+    I -->|Sí| K{¿Cuenta activa?}
+    K -->|No| L[Limpiar cookie + 403]
+    K -->|Sí| M[Adjuntar user a req]
+    M --> N[Next]
+    N --> O[Fin]
+
+```
 ## 🛡️ Seguridad
 
 - ✅ Rutas protegidas con middleware `protecRoute` que verifica el token JWT
