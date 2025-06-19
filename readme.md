@@ -186,6 +186,23 @@ flowchart TD
     K --> L[Redirigir a dashboard]
     L --> M[Fin]
 ```
+Inicio sesion Diagrama de secuencia
+```mermaid
+sequenceDiagram
+    participant Frontend
+    participant Backend
+    participant DB
+    Frontend->>Backend: POST /api/auth/login (username, password)
+    Backend->>DB: Buscar usuario por username
+    alt Usuario no existe o contraseña incorrecta
+        Backend-->>Frontend: 400 (Error: Credenciales inválidas)
+    else Credenciales válidas
+        Backend->>DB: Verificar contraseña con bcrypt
+        Backend->>Backend: Generar token JWT (15 días)
+        Backend->>Frontend: Set cookie httpOnly + Datos usuario (200)
+    end
+
+```
 
 ### Cerrar sesión
 Archivos relacionados: auth.controller.js, logout.js
@@ -195,6 +212,52 @@ flowchart TD
     B --> C[Limpiar cookie 'jwt']
     C --> D[Redirigir a página de inicio]
     D --> E[Fin]
+```
+Diagrama secuencia Cerrar sesion
+```mermaid
+sequenceDiagram
+    participant Frontend
+    participant Backend
+    Frontend->>Backend: POST /api/auth/logout
+    Backend->>Frontend: Limpiar cookie 'jwt' (200)
+    Frontend->>Frontend: Redirigir a página de inicio
+```
+
+### Crecion de cuenta Diagrama secuencia
+```mermaid
+sequenceDiagram
+    participant Frontend
+    participant Backend
+    participant DB
+    Frontend->>Backend: POST /api/auth/signup (datos usuario)
+    Backend->>DB: Verificar username/email único
+    alt Datos inválidos
+        Backend-->>Frontend: 400 (Error: Email/username ya existe)
+    else Datos válidos
+        Backend->>Backend: Crear UserPrototype + Clonar
+        Backend->>DB: Guardar nuevo usuario
+        Backend->>Backend: Generar token JWT
+        Backend->>Frontend: Set cookie + Datos usuario (201)
+    end
+
+```
+### Recuperar contraseña Diagrama secuencia
+```mermaid
+sequenceDiagram
+    participant Frontend
+    participant Backend
+    participant DB
+    participant EmailService
+    Frontend->>Backend: POST /api/auth/recover-password (email)
+    Backend->>DB: Buscar usuario por email
+    alt Email no registrado
+        Backend-->>Frontend: 404 (Error)
+    else Email válido
+        Backend->>Backend: Generar token temporal (no implementado aún)
+        Backend->>DB: Guardar token temporal
+        Backend->>EmailService: Enviar email con enlace (simulado en tu código)
+        Backend-->>Frontend: 200 (Éxito)
+    end
 ```
 ### Desactivar cuenta
 Archivos relacionados: user.controller.js, deactivateAccount.js
@@ -268,6 +331,25 @@ flowchart TD
     M --> N[Next]
     N --> O[Fin]
 
+```
+```mermaid
+sequenceDiagram
+    participant Frontend
+    participant Backend
+    participant DB
+    Frontend->>Backend: Request con cookie 'jwt'
+    Backend->>Backend: Verificar token JWT
+    alt Token inválido
+        Backend->>Frontend: 401 + Limpiar cookie
+    else Token válido
+        Backend->>DB: Buscar usuario por ID (decoded.userId)
+        alt Usuario no existe o inactivo
+            Backend->>Frontend: 403/404 + Limpiar cookie
+        else Usuario válido
+            Backend->>Backend: Adjuntar user a req
+            Backend->>Frontend: Continuar petición
+        end
+    end
 ```
 ## 🛡️ Seguridad
 
