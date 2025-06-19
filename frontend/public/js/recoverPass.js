@@ -1,15 +1,19 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Mostrar modal de recuperación
-    document.getElementById('forgotPasswordLink').addEventListener('click', function(e) {
-        e.preventDefault();
-        showRecoverModal();
+    // Usamos event delegation para manejar el clic
+    document.body.addEventListener('click', function(e) {
+        // Verificamos si el clic fue en el enlace de recuperación
+        if (e.target && e.target.id === 'forgotPasswordLink') {
+            e.preventDefault();
+            showRecoverModal();
+        }
     });
 
     function showRecoverModal() {
         const modal = document.createElement('div');
-        modal.className = 'modal-recover';
+        modal.id = 'recoverModal'; // Añadimos un ID único
+        modal.className = 'modal';
         modal.innerHTML = `
-            <div class="modal-recover-content">
+            <div class="modal-content">
                 <span class="close-modal">&times;</span>
                 <h2>Recuperar Contraseña</h2>
                 <form id="recoverForm">
@@ -28,9 +32,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         // Enviar formulario
-        document.getElementById('recoverForm').addEventListener('submit', function(e) {
+        modal.querySelector('#recoverForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const email = document.getElementById('recoverEmail').value;
+            const email = modal.querySelector('#recoverEmail').value;
 
             fetch('/api/auth/recover-password', {
                 method: 'POST',
@@ -41,13 +45,12 @@ document.addEventListener('DOMContentLoaded', function() {
             })
                 .then(response => response.json())
                 .then(data => {
-                    const resultDiv = document.getElementById('recoverResult');
+                    const resultDiv = modal.querySelector('#recoverResult');
                     if (data.success) {
                         resultDiv.innerHTML = `
                         <div class="recover-info">
                             <p><strong>Email:</strong> ${data.email}</p>
-                            <p><strong>Contraseña:</strong> ${data.password}</p>
-                            <p><strong>Hash almacenado:</strong> ${data.passwordHash}</p>
+                            <p><strong>Contraseña hasheada:</strong> ${data.passwordHash}</p>
                             <p class="note">${data.note}</p>
                         </div>
                     `;
@@ -56,8 +59,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 })
                 .catch(error => {
-                    document.getElementById('recoverResult').innerHTML =
-                        `<div class="error">Error al conectar con el servidor</div>`;
+                    const resultDiv = modal.querySelector('#recoverResult');
+                    resultDiv.innerHTML = `<div class="error">Error al conectar con el servidor</div>`;
                 });
         });
     }

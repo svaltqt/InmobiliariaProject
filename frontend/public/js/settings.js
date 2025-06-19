@@ -1,6 +1,8 @@
 import './update.js';
 
 document.addEventListener("DOMContentLoaded", async () => {
+    const deleteBtn = document.getElementById('deleteAccountBtn');
+
     try {
         const res = await fetch("/api/auth/me", {
             credentials: "include"

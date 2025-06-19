@@ -44,7 +44,6 @@ export const updateUser = async (req, res) => {
             user.password = await bcrypt.hash(newPassword, salt);
         }
 
-        // Verifica si el nuevo email o username ya existen en otro usuario
         if (email && email !== user.email) {
             const emailExists = await User.findOne({ email });
             if (emailExists && emailExists._id.toString() !== user._id.toString()) {
@@ -59,7 +58,6 @@ export const updateUser = async (req, res) => {
             }
         }
 
-        // Asignar nuevos datos
         user.fullName = fullName || user.fullName;
         user.username = username || user.username;
         user.email = email || user.email;
@@ -71,7 +69,6 @@ export const updateUser = async (req, res) => {
 
         await user.save();
 
-        // Devolver los datos actualizados
         res.status(200).json({
             _id: user._id,
             fullName: user.fullName,
@@ -88,4 +85,51 @@ export const updateUser = async (req, res) => {
         console.log("Error in updateUser controller", error.message);
         res.status(500).json({ error: "Internal Server Error" });
     }
-}
+};
+
+export const deleteUser = async (req, res) => {
+    try {
+        const userId = req.user._id;
+        const deletedUser = await User.findByIdAndDelete(userId);
+
+        if (!deletedUser) {
+            return res.status(404).json({ error: "Usuario no encontrado" });
+        }
+
+        res.clearCookie('token');
+        res.status(200).json({
+            success: true,
+            message: "Cuenta eliminada permanentemente"
+        });
+
+    } catch (error) {
+        console.log("Error in deleteUser controller", error.message);
+        res.status(500).json({ error: "Error interno del servidor" });
+    }
+};
+
+export const deactivateUser = async (req, res) => {
+    try {
+        const userId = req.user._id;
+
+        // 1. Marcar como desactivado en DB
+        await User.findByIdAndUpdate(userId, {
+            active: false,
+            deactivatedAt: new Date()
+        });
+
+        // 2. Invalidar el token actual
+        res.clearCookie("jwt");
+
+        // 3. Responder con flag especial
+        res.status(200).json({
+            success: true,
+            message: "Account deactivated",
+            deactivated: true  // Para manejo en frontend
+        });
+
+    } catch (error) {
+        console.error("Error in deactivateUser:", error);
+        res.status(500).json({ error: "Error al desactivar la cuenta" });
+    }
+};

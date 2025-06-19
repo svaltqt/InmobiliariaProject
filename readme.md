@@ -1,4 +1,4 @@
-# 📦 User Settings App
+# 📦 InmobiliarIA Web/App
 
 Esta es una aplicación web full stack que permite a los usuarios visualizar y modificar su información personal. Usa **Node.js con Express** para el backend y **HTML/CSS/JavaScript modular** para el frontend.
 
@@ -120,18 +120,135 @@ InmobiliariaProject/
 - 🔐 Inicio de sesión con autenticación JWT
 - 👤 Visualización de los datos del perfil del usuario autenticado
 - 📝 Edición de campos del perfil:
-    - Nombre completo
-    - Nombre de usuario
-    - Correo electrónico (con verificación de duplicados)
-    - Teléfono
-    - Dirección
-    - Tipo de usuario (`cliente` o `propietario`)
-    - Contraseña (requiere ingresar la contraseña actual y la nueva)
+  - Nombre completo
+  - Nombre de usuario
+  - Correo electrónico (con verificación de duplicados)
+  - Teléfono
+  - Dirección
+  - Tipo de usuario (`cliente` o `propietario`)
+  - Contraseña (requiere ingresar la contraseña actual y la nueva)
 - 🔄 Mantenimiento de sesión activa mediante cookies HTTPOnly
 - 🚪 Cierre de sesión seguro
 
 ---
 
+## Diagramas de FLujo
+
+### Patron de diseño
+Diagrama de Flujo del Prototype en Signup
+```mermaid
+flowchart TD
+    A[Inicio: Datos de registro] --> B[Crear UserPrototype base]
+    B --> C[Clonar prototipo]
+    C --> D[Crear instancia de User mongoose]
+    D --> E{¿Clonación exitosa?}
+    E -->|Sí| F[Guardar en BD y generar token]
+    E -->|No| G[Error: Datos inválidos]
+    F --> H[Respuesta 201: Usuario creado]
+    G --> I[Respuesta 400: Error]
+```
+
+### Inicio sesión
+Archivos relacionados: auth.controller.js, login.js, protecRoute.js
+```mermaid
+flowchart TD
+    A[Inicio] --> B[Ingresar username y password]
+    B --> C{Validar campos vacíos?}
+    C -->|Sí| D[Mostrar error]
+    C -->|No| E[POST /api/auth/login]
+    E --> F{Usuario existe en BD?}
+    F -->|No| G[Mostrar error: Credenciales inválidas]
+    F -->|Sí| H[Verificar contraseña con bcrypt]
+    H --> I{¿Coincide?}
+    I -->|No| G
+    I -->|Sí| J[Generar token JWT '15 días']
+    J --> K[Set cookie httpOnly]
+    K --> L[Redirigir a dashboard]
+    L --> M[Fin]
+```
+
+### Cerrar sesión
+Archivos relacionados: auth.controller.js, logout.js
+```mermaid
+flowchart TD
+    A[Inicio] --> B[POST /api/auth/logout]
+    B --> C[Limpiar cookie 'jwt']
+    C --> D[Redirigir a página de inicio]
+    D --> E[Fin]
+```
+### Desactivar cuenta
+Archivos relacionados: user.controller.js, deactivateAccount.js
+```mermaid
+flowchart TD
+    A[Inicio] --> B[Mostrar confirmación]
+    B --> C{¿Confirmó?}
+    C -->|No| D[Cancelar]
+    C -->|Sí| E[POST /api/users/deactivate]
+    E --> F[Actualizar BD: active=false]
+    F --> G[Limpiar cookie JWT]
+    G --> H[Redirigir a inicio con flag ?account=deactivated]
+    H --> I[Fin]
+```
+
+### Eliminar Cuenta
+Archivos relacionados: user.controller.js, deleteAccount.js
+```mermaid
+flowchart TD
+    A[Inicio] --> B[Mostrar confirmación irreversible]
+    B --> C{¿Confirmó?}
+    C -->|No| D[Cancelar]
+    C -->|Sí| E[Solicitar contraseña]
+    E --> F{¿Contraseña válida?}
+    F -->|No| G[Mostrar error]
+    F -->|Sí| H[DELETE /api/users/delete]
+    H --> I[Eliminar usuario de BD]
+    I --> J[Limpiar cookies/localStorage]
+    J --> K[Redirigir a página de inicio]
+    K --> L[Fin]
+
+```
+
+### Modificar Perfil
+Archivos relacionados: user.controller.js, update.js
+```mermaid
+flowchart TD
+    A[Inicio] --> B[Seleccionar campo a modificar]
+    B --> C{¿Es contraseña?}
+    C -->|No| D[Mostrar input/select]
+    C -->|Sí| E[Mostrar inputs: actual y nueva]
+    D/E --> F[Validar formato 'email, etc.']
+    F --> G{¿Datos válidos?}
+    G -->|No| H[Mostrar error]
+    G -->|Sí| I[POST /api/users/update]
+    I --> J{¿Cambió contraseña?}
+    J -->|Sí| K[Verificar actual con bcrypt]
+    K --> L{¿Coincide?}
+    L -->|No| M[Mostrar error]
+    L -->|Sí| N[Hashear nueva contraseña]
+    J -->|No| O[Actualizar campo en BD]
+    N/O --> P[Devolver datos actualizados]
+    P --> Q[Mostrar nuevo valor en UI]
+    Q --> R[Fin]
+```
+### Middleware: protecRoute
+```mermaid
+flowchart TD
+    A[Inicio] --> B[Obtener cookie 'jwt']
+    B --> C{¿Token existe?}
+    C -->|No| D[401: No autorizado]
+    C -->|Sí| E[Verificar JWT_SECRET]
+    E --> F{¿Token válido?}
+    F -->|No| G[Limpiar cookie + 401]
+    F -->|Sí| H[Buscar usuario en BD]
+    H --> I{¿Existe?}
+    I -->|No| J[Limpiar cookie + 404]
+    I -->|Sí| K{¿Cuenta activa?}
+    K -->|No| L[Limpiar cookie + 403]
+    K -->|Sí| M[Adjuntar user a req]
+    M --> N[Next]
+    N --> O[Fin]
+
+```
 ## 🛡️ Seguridad
 
 - ✅ Rutas protegidas con middleware `protecRoute` que verifica el token JWT
