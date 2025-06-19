@@ -133,6 +133,21 @@ InmobiliariaProject/
 ---
 
 ## Diagramas de FLujo
+
+### Patron de diseño
+Diagrama de Flujo del Prototype en Signup
+```mermaid
+flowchart TD
+    A[Inicio: Datos de registro] --> B[Crear UserPrototype base]
+    B --> C[Clonar prototipo]
+    C --> D[Crear instancia de User mongoose]
+    D --> E{¿Clonación exitosa?}
+    E -->|Sí| F[Guardar en BD y generar token]
+    E -->|No| G[Error: Datos inválidos]
+    F --> H[Respuesta 201: Usuario creado]
+    G --> I[Respuesta 400: Error]
+```
+
 ### Inicio sesión
 Archivos relacionados: auth.controller.js, login.js, protecRoute.js
 ```mermaid
