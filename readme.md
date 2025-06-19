@@ -147,7 +147,27 @@ flowchart TD
     F --> H[Respuesta 201: Usuario creado]
     G --> I[Respuesta 400: Error]
 ```
+## Arquitectura MVC
 
+Este proyecto sigue el patrón de diseño **Modelo-Vista-Controlador (MVC)** para organizar el backend de forma clara y escalable.
+
+- **Vista**: `"public/"` — Interfaz de usuario en HTML, CSS y JS.
+- **Modelo (`models/`)**: Define las estructuras de datos y su lógica (por ejemplo, `user.model.js`).
+- **Controlador (`controllers/`)**: Contiene la lógica de negocio y responde a las solicitudes HTTP.
+- **Rutas (`routes/`)**: Define los endpoints y conecta con los controladores.
+- **Middleware**: Archivos como `protecRoute.js` protegen las rutas según la autenticación.
+
+### Diagrama de Flujo MVC
+```mermaid
+flowchart TD
+    A["Vista: 'public/'"] -->|"Solicita datos"| B["Rutas"]
+    B -->|"Pasan por middleware"| C["Controladores"]
+    C -->|"Clona 'userPrototype'"| D["Modelo: 'user.model.js'"]
+    D -->|"Consulta / guarda"| E["Base de Datos: 'MongoDB Atlas'"]
+    E -->|"Respuesta"| A
+
+```
+    
 ### Inicio sesión
 Archivos relacionados: auth.controller.js, login.js, protecRoute.js
 ```mermaid
